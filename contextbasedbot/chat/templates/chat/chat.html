@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #chatBox {
+            height: 400px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+        }
+        .user-msg { color: #0d6efd; }
+        .bot-msg { color: #198754; }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <h3 class="mb-4">Ask about your uploaded content</h3>
+
+    <div class="d-flex justify-content-start gap-2 mb-3">
+        <a href="{% url 'new_session' %}" class="btn btn-warning">🔄 New Session</a>
+        <a href="/" class="btn btn-secondary">🏠 Back to Home</a>
+    </div>
+
+    <div id="chatBox" class="border rounded p-3 mb-3">
+        {% if history %}
+            {% for msg in history %}
+                <p class="user-msg"><strong>You:</strong> {{ msg.question }}</p>
+                <p class="bot-msg"><strong>Bot:</strong> {{ msg.answer }}</p>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">Start asking questions based on your uploaded content.</p>
+        {% endif %}
+    </div>
+
+    <form id="chatForm">
+        <div class="input-group">
+            <input type="text" id="question" class="form-control" placeholder="Ask a question..." required>
+            <button class="btn btn-primary" type="submit">Send</button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.getElementById('chatForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const questionInput = document.getElementById('question');
+    const question = questionInput.value.trim();
+    if (!question) return;
+
+    const response = await fetch("{% url 'chat_query_api' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question })
+    });
+
+    const data = await response.json();
+    const chatBox = document.getElementById('chatBox');
+
+    chatBox.innerHTML += `<p class="user-msg"><strong>You:</strong> ${question}</p>`;
+    chatBox.innerHTML += `<p class="bot-msg"><strong>Bot:</strong> ${data.answer}</p>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    questionInput.value = '';
+});
+</script>
+</body>
+</html>
