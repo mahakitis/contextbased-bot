@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "contextbot"
+version = "0.1.0"
+description = ""
+authors = ["mahakitis <mahak137j@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.14"
+django = "^5.2.4"
+djangorestframework = "^3.16.0"
+pgvector = "^0.4.1"
+groq = "^0.30.0"
+pydantic = "^2.11.7"
+dotenv = "^0.9.9"
+psycopg = "^3.2.9"
+psycopg2 = "^2.9.10"
+sentence-transformers = "^5.0.0"
+pypdf = "^5.8.0"
+beautifulsoup4 = "^4.13.4"
+youtube-transcript-api = "^1.2.1"
+pypdf2 = "^3.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
